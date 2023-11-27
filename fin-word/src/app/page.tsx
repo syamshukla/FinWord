@@ -13,7 +13,7 @@ import {
 
 const getStockData = async (symbol: any) => {
   const response = await fetch(
-    `https://api.polygon.io/v3/reference/tickers/${symbol}?apiKey=${uyJZfjE33Dd1QXpRxp20ie5tZHdLx3lH}`
+    `https://api.polygon.io/v3/reference/tickers/${symbol}?apiKey=uyJZfjE33Dd1QXpRxp20ie5tZHdLx3lH}`
   );
   const data = await response.json();
   return data;
