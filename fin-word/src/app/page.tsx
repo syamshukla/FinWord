@@ -24,10 +24,10 @@ export default function page() {
   return (
     <>
       <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="email">Email</Label>
-        <Input type="email" id="email" placeholder="Email" />
+        <Label htmlFor="email">Stock Ticker</Label>
+        <Input type="stock" id="ticker" placeholder="AAPL" />
       </div>
-      <div>FinWord</div>;
+      
     </>
   );
 }
