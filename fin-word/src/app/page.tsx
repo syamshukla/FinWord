@@ -23,7 +23,7 @@ import React from "react";
 
 export default function page() {
   return (
-    <>
+    <div className="h-screen flex flex-col justify-center items-center">
       <div className="grid w-full max-w-sm items-center gap-1.5">
         <Label htmlFor="email">Stock Ticker</Label>
         <Input type="stock" id="ticker" placeholder="AAPL" />
@@ -58,6 +58,6 @@ export default function page() {
           </TableRow>
         </TableBody>
       </Table>
-    </>
+    </div>
   );
 }
