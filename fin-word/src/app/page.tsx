@@ -18,7 +18,7 @@ import { Button } from "@/components/ui/button";
 export default function page() {
   const [ticker, setTicker] = useState("");
   const tickers: never[] = [];
-
+  const [stockDataList, setStockDataList] = useState<any[]>([]);
   const saveReset = async () => {
     const data = getStockData(ticker);
     console.log(data);
@@ -58,6 +58,7 @@ export default function page() {
       );
       const data = await response.json();
       const { high, low, open, close } = data;
+      setStockDataList([...stockDataList, data]);
       console.log(data);
       return data;
       if (!response.ok) {
@@ -80,7 +81,7 @@ export default function page() {
         />
         <button onClick={saveReset}>Enter</button>
       </div>
-      <Table className="">
+      <Table>
         <TableHeader>
           <TableRow>
             <TableHead>Ticker</TableHead>
@@ -88,31 +89,14 @@ export default function page() {
           </TableRow>
         </TableHeader>
         <TableBody>
-          <TableRow>
-            <TableCell className="font-medium"></TableCell>
-            <TableCell></TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">1</TableCell>
-            <TableCell>1</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">1</TableCell>
-            <TableCell>1</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">1</TableCell>
-            <TableCell>1</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell className="font-medium">1</TableCell>
-            <TableCell>1</TableCell>
-          </TableRow>
+          {stockDataList.map((stockData, index) => (
+            <TableRow key={index}>
+              <TableCell>{stockData.symbol}</TableCell>
+              <TableCell>{stockData.close}</TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
     </div>
   );
-}
-function getStockData(ticker: string) {
-  throw new Error("Function not implemented.");
 }
