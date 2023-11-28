@@ -25,7 +25,7 @@ export default function page() {
   };
   function handleKeyPress(
     e: React.KeyboardEvent<HTMLInputElement>,
-    ticker: string
+    ticker: string,
   ) {
     var key = e.key;
     console.log("You pressed a key: " + key);
@@ -54,7 +54,7 @@ export default function page() {
     const date = `${year}-${month}-${day}`;
     try {
       const response = await fetch(
-        `https://api.polygon.io/v1/open-close/${symbol}/${date}?adjusted=true&apiKey=${apiKey}`
+        `https://api.polygon.io/v1/open-close/${symbol}/${date}?adjusted=true&apiKey=${apiKey}`,
       );
       const data = await response.json();
       const { high, low, open, close } = data;
@@ -70,7 +70,7 @@ export default function page() {
     }
   };
   return (
-    <div className="h-screen flex flex-col justify-center items-center">
+    <div className="flex h-screen flex-col items-center justify-center">
       <div className="grid w-full max-w-sm items-center gap-1.5">
         <Label htmlFor="email">Stock Ticker</Label>
         <input
