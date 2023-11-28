@@ -36,28 +36,33 @@ export default function page() {
     }
   }
   const getStockData = async (symbol: any) => {
-    const apiKey = "uyJZfjE33Dd1QXpRxp20ie5tZHdLx3lH"; // Replace with your actual API key
+    const apiKey = "X5dRPphf5sGhzIdHr9ElQLHQ_oBg8RIF"; // Replace with your actual API key
+    const currentDate = new Date();
 
+    // Exclude the present day
+    currentDate.setDate(currentDate.getDate() - 1);
+
+    // Ensure we go back to the last market open day (considering weekends)
+    while (currentDate.getDay() === 0 || currentDate.getDay() === 6) {
+      currentDate.setDate(currentDate.getDate() - 1);
+    }
+
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0"); // Adding 1 because months are zero-based
+    const day = String(currentDate.getDate()).padStart(2, "0");
+
+    const date = `${year}-${month}-${day}`;
     try {
       const response = await fetch(
-        `https://api.polygon.io/v3/reference/tickers/${symbol}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${apiKey}`,
-            // You can include other headers if required, for example:
-            // 'Content-Type': 'application/json'
-          },
-          mode: "cors", // Include this line to enable CORS
-        }
+        `https://api.polygon.io/v1/open-close/${symbol}/${date}?adjusted=true&apiKey=${apiKey}`
       );
-
+      const data = await response.json();
+      const { high, low, open, close } = data;
+      console.log(data);
+      return data;
       if (!response.ok) {
         throw new Error(`Error: ${response.statusText}`);
       }
-
-      const data = await response.json();
-      return data;
     } catch (error) {
       console.error("Error:", error);
       throw error;
