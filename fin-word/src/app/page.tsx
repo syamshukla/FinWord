@@ -71,15 +71,17 @@ export default function page() {
   };
   return (
     <div className="flex h-screen flex-col items-center justify-center">
-      <div className="grid w-full max-w-sm items-center gap-1.5">
-        <Label htmlFor="email">Stock Ticker</Label>
-        <input
+      <div className="flex w-full max-w-sm flex-col items-center gap-1.5">
+        <Label htmlFor="email">
+          Enter Stock Ticker ({stockDataList.length}/5)
+        </Label>
+        <Input
           type="text"
           id="ticker"
           placeholder="AAPL"
           onChange={(e) => setTicker(e.target.value.toUpperCase())}
         />
-        <button onClick={saveReset}>Enter</button>
+        <Button onClick={saveReset}>Enter</Button>
       </div>
       <Table>
         <TableHeader>
