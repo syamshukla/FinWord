@@ -2,7 +2,7 @@
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { initializeApp } from 'firebase/app';
-import { firebaseConfig } from '@/lib/firebase/index';
+import { db, firebaseConfig } from '@/lib/firebase/index';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollection } from 'react-firebase-hooks/firestore';
 import React, { useEffect, useState } from 'react';
@@ -47,16 +47,17 @@ export default function Page() {
         const docSnap = await getDoc(userDocRef);
         const docExists = docSnap.exists();
         console.log('Document exists:', docExists);
-
+        console.log('stockDataList', stockDataList);
         if (docExists) {
           // Update the existing document with the new stock data
           await updateDoc(userDocRef, {
-            stocks: [...stockDataList, { ticker: data.ticker, name: data.name }],
+            stocks: [...stockDataList, { ticker: data.results.ticker, name: data.results.name }],
           });
         } else {
-          // Create a new document with the stock data
-          await setDoc(userDocRef, {
-            stocks: [{ ticker: data.ticker, name: data.name }],
+          console.log("ticker data", data)
+          // Create a new document with the stock datar
+          await setDoc(doc(db, 'picks', documentId), {
+            stocks: [{ ticker: data.results.ticker, name: data.results.name }],
           });
         }
 
