@@ -1,5 +1,8 @@
-import LoginButton from "@/components/login/Login";
-import Image from "next/image";
+import dynamic from 'next/dynamic';
+
+const LoginButton = dynamic(() => import('@/components/login/Login'), {
+  ssr: false, // This ensures the component is not included in SSR
+});
 
 export default function Login() {
   return (
