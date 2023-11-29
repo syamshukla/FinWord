@@ -54,14 +54,13 @@ export default function Page() {
             stocks: [...stockDataList, { ticker: data.results.ticker, name: data.results.name }],
           });
         } else {
-          console.log("ticker data", data)
-          // Create a new document with the stock data
-
-          await setDoc(doc(db, 'picks', documentId), {
-            stocks: [{ ticker: data.results.ticker, name: data.results.name }],
+          console.log("ticker data", data);
+        
+          // Create a new document with the updated stock data list
+          await setDoc(userDocRef, {
+            stocks: [...stockDataList, { ticker: data.results.ticker, name: data.results.name }],
           });
         }
-
         setUserUpdated(true);
       }
     } catch (error) {
