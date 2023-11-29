@@ -1,10 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-"use client";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { collection, addDoc } from "firebase/firestore"; 
+'use client'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { collection, addDoc } from 'firebase/firestore'
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react'
 import {
   Table,
   TableBody,
@@ -13,50 +13,51 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/table'
+import { Button } from '@/components/ui/button'
 
 export default function page() {
-  const [ticker, setTicker] = useState("");
-  const tickers = [];
-  const [stockDataList, setStockDataList] = useState<any[]>([]);
+  const [ticker, setTicker] = useState('')
+  const tickers = []
+  const [stockDataList, setStockDataList] = useState<any[]>([])
   const saveReset = async () => {
     try {
-      const data = await getStockData(ticker);
+      const data = await getStockData(ticker)
     } catch (error) {
-      console.error("Error:", error);
+      console.error('Error:', error)
     }
-  };
+  }
 
   const getStockData = async (symbol: any) => {
     if (stockDataList.length >= 5) {
-      console.log("Max number of stocks reached");
-      return;
+      console.log('Max number of stocks reached')
+      return
     }
 
-    const apiKey = "X5dRPphf5sGhzIdHr9ElQLHQ_oBg8RIF"; 
+    const apiKey = '0asLfTPzTAe9WSPJHa1CNzp9pvbdhX9h'
     try {
       const response = await fetch(
-        `https://api.polygon.io/v3/reference/tickers/${symbol}?apiKey=${apiKey}`
-      );
+        `https://api.polygon.io/v3/reference/tickers/${symbol}?apiKey=${apiKey}`,
+      )
       if (!response.ok) {
-        throw new Error(`Request failed with status: ${response.status}`);
+        throw new Error(`Request failed with status: ${response.status}`)
       }
-      const data = await response.json();
-      const ticker = data.ticker; 
-      const name = data.name; 
-  
-      setStockDataList([...stockDataList, { ticker, name }]);
-      console.log(stockDataList);
-      return data;
-    } catch (error) { 
-      console.error("Error:", error);
+      const data = await response.json()
+      const ticker = data.results.ticker
+      const name = data.results.name
+
+      setStockDataList([...stockDataList, { ticker, name }])
+      console.log(data)
+      return data
+    } catch (error) {
+      console.error('Error:', error)
     }
-    useEffect(() => {
-      // This will be triggered whenever stockDataList changes
-      console.log("Stock data list updated:", stockDataList);
-    }, []);
-  };
+  }
+  useEffect(() => {
+    // This will be triggered whenever stockDataList changes
+    console.log('Stock data list updated:', stockDataList)
+  }, [stockDataList])
+
   return (
     <div className="flex h-screen flex-col items-center justify-center">
       <div className="flex w-full max-w-sm flex-col items-center gap-1.5">
@@ -88,5 +89,5 @@ export default function page() {
         </TableBody>
       </Table>
     </div>
-  );
+  )
 }
