@@ -4,6 +4,7 @@ import './globals.css'
 import { ThemeProvider } from '@/components/theme-provider'
 import MainNav from '@/components/layout/main-nav'
 import { Container } from '@/components/layout/container'
+import { Toaster } from 'sonner'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -28,6 +29,7 @@ export default function RootLayout({
         >
           <MainNav />
           <Container>{children}</Container>
+          <Toaster richColors position="top-center" />
         </ThemeProvider>
       </body>
     </html>

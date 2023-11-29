@@ -15,6 +15,7 @@ import {
   TableRow,
 } from '@/components/ui/table'
 import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
 
 export default function page() {
   const [ticker, setTicker] = useState('')
@@ -31,6 +32,7 @@ export default function page() {
   const getStockData = async (symbol: any) => {
     if (stockDataList.length >= 5) {
       console.log('Max number of stocks reached')
+      toast.error('Max number of stocks reached')
       return
     }
 
