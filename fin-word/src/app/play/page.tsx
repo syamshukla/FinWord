@@ -55,7 +55,8 @@ export default function Page() {
           });
         } else {
           console.log("ticker data", data)
-          // Create a new document with the stock datar
+          // Create a new document with the stock data
+
           await setDoc(doc(db, 'picks', documentId), {
             stocks: [{ ticker: data.results.ticker, name: data.results.name }],
           });
