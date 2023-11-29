@@ -28,7 +28,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <MainNav />
-          <Container>{children}</Container>
+          {children}
           <Toaster richColors position="top-center" />
         </ThemeProvider>
       </body>

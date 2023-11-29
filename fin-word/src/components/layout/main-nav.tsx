@@ -1,22 +1,22 @@
-"use client";
+'use client'
 
-import React from "react";
+import React from 'react'
 
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { cn } from '@/lib/utils'
+import { usePathname } from 'next/navigation'
 
-import { RocketIcon } from "@radix-ui/react-icons";
-import { ModeToggle } from "../mode-toggle";
+import { RocketIcon } from '@radix-ui/react-icons'
+import { ModeToggle } from '../mode-toggle'
 
 export default function MainNav() {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <nav
-        className="flex items-center justify-between py-3 px-3"
+        className="flex items-center justify-between px-3 py-3"
         aria-label="Global"
       >
         <div className="flex items-center gap-x-12">
@@ -30,8 +30,8 @@ export default function MainNav() {
             <Link
               href="/test"
               className={cn(
-                "transition-colors hover:text-foreground/80 text-sm font-light",
-                pathname === "/test" ? "text-foreground" : "text-foreground/60"
+                'text-sm font-light transition-colors hover:text-foreground/80',
+                pathname === '/test' ? 'text-foreground' : 'text-foreground/60',
               )}
             >
               Test
@@ -47,10 +47,12 @@ export default function MainNav() {
           </button>
         </div>
         <div className="flex items-center space-x-1">
-          <Button>Login</Button>
+          <Button asChild>
+            <Link href="/play">Play Now</Link>
+          </Button>
           <ModeToggle />
         </div>
       </nav>
     </header>
-  );
+  )
 }
