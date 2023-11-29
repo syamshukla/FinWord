@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 
 export default function page() {
   const [ticker, setTicker] = useState("");
-  const tickers: never[] = [];
+  const tickers = [];
   const [stockDataList, setStockDataList] = useState<any[]>([]);
   const saveReset = async () => {
     const data = getStockData(ticker);
@@ -36,6 +36,11 @@ export default function page() {
     }
   }
   const getStockData = async (symbol: any) => {
+    if (stockDataList.length >= 5) {
+      console.log("Max number of stocks reached");https://github.com/rreichel3/US-Stock-Symbols
+      return;
+    }
+
     const apiKey = "X5dRPphf5sGhzIdHr9ElQLHQ_oBg8RIF"; // Replace with your actual API key
     const currentDate = new Date();
 

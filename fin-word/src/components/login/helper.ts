@@ -5,7 +5,8 @@ import {
   setPersistence,
   signInWithPopup,
 } from "firebase/auth";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+
 
 export const handleSignIn = (router: AppRouterInstance) => {
   setPersistence(auth, browserSessionPersistence)
