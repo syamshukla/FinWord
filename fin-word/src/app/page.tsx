@@ -24,6 +24,7 @@ export default function page() {
   const saveReset = async () => {
     try {
       const data = await getStockData(ticker)
+      setTicker('') // Reset the form on submit
     } catch (error) {
       console.error('Error:', error)
     }
@@ -36,7 +37,7 @@ export default function page() {
       return
     }
 
-    const apiKey = '0asLfTPzTAe9WSPJHa1CNzp9pvbdhX9h'
+    const apiKey = 'xAp21MggyECNd7Te8iI9XrkDluDs1NIr'
     try {
       const response = await fetch(
         `https://api.polygon.io/v3/reference/tickers/${symbol}?apiKey=${apiKey}`,
@@ -71,8 +72,11 @@ export default function page() {
           id="ticker"
           placeholder="AAPL"
           onChange={(e) => setTicker(e.target.value.toUpperCase())}
+          value={ticker}
         />
-        <Button onClick={saveReset}>Enter</Button>
+        <Button disabled={!ticker} onClick={saveReset}>
+          Enter
+        </Button>
       </div>
       <Table>
         <TableHeader>
