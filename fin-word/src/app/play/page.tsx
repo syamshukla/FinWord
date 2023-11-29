@@ -1,52 +1,72 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-'use client'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { collection, addDoc, doc, updateDoc } from 'firebase/firestore'
-import { initializeApp } from 'firebase/app'
-import { firebaseConfig } from '@/lib/firebase/index'
-
-const app = initializeApp(firebaseConfig)
-import React, { useEffect, useState } from 'react'
+"use client"
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { initializeApp } from 'firebase/app';
+import { firebaseConfig } from '@/lib/firebase/index';
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollection } from 'react-firebase-hooks/firestore';
+import React, { useEffect, useState } from 'react';
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table'
-import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import { getAuth } from 'firebase/auth';
 
-export default function page() {
-  const [ticker, setTicker] = useState('')
-  const [stockDataList, setStockDataList] = useState<any[]>([])
-  const [userUpdated, setUserUpdated] = useState(false)
+import { getFirestore, collection, doc, updateDoc, setDoc, getDoc } from 'firebase/firestore';
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const firestore = getFirestore(app);
+
+export default function Page() {
+  const [ticker, setTicker] = useState('');
+  const [stockDataList, setStockDataList] = useState<any[]>([]);
+  const [userUpdated, setUserUpdated] = useState(false);
+  const [user] = useAuthState(auth); // Assuming you are using Firebase Authentication
+  const currentDate = new Date().toISOString().split('T')[0];
 
   const saveReset = async () => {
     try {
-      const data = await getStockData(ticker)
+      const data = await getStockData(ticker);
 
-      if (stockDataList.length === 4) {
-        // Assuming you have a user ID (replace 'your-user-id' with the actual user ID)
-        const userId = 'your-user-id'
+      if (stockDataList.length === 4 && user) {
+        const userId = user.uid;
 
-        // Get the user document reference
-        const userDocRef = doc(collection(app, 'users'), userId)
+        // Create a document reference with an even number of segments
+        const documentId = `${userId}_${currentDate}`;
+        const userDocRef = doc(collection(firestore, 'picks'), documentId);
+        console.log('Document reference path:', userDocRef.path);
+        
+        // Check if the document exists
+        const docSnap = await getDoc(userDocRef);
+        const docExists = docSnap.exists();
+        console.log('Document exists:', docExists);
 
-        // Update the user document with the new stock data
-        await updateDoc(userDocRef, {
-          stocks: [...stockDataList, { ticker: data.ticker, name: data.name }],
-        })
+        if (docExists) {
+          // Update the existing document with the new stock data
+          await updateDoc(userDocRef, {
+            stocks: [...stockDataList, { ticker: data.ticker, name: data.name }],
+          });
+        } else {
+          // Create a new document with the stock data
+          await setDoc(userDocRef, {
+            stocks: [{ ticker: data.ticker, name: data.name }],
+          });
+        }
 
-        setUserUpdated(true)
+        setUserUpdated(true);
       }
     } catch (error) {
-      console.error('Error:', error)
+      console.error('Error:', error);
     }
   }
+
 
   const getStockData = async (symbol: any) => {
     if (stockDataList.length >= 5) {
