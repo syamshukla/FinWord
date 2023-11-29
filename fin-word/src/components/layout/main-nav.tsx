@@ -23,7 +23,7 @@ export default function MainNav() {
           <Link href="/" className="flex items-center space-x-2">
             <RocketIcon className="h-5 w-5 text-foreground" />
             <span className="overflow-auto font-semibold leading-tight tracking-tight">
-              FinWord
+            BULL-ISH
             </span>
           </Link>
           <div className="hidden md:flex md:gap-x-12">

@@ -9,8 +9,8 @@ import { Toaster } from 'sonner'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-  title: 'FIN WORD',
-  description: 'Wordle For Finance Bros',
+  title: 'BULL-ISH',
+  description: '',
 }
 
 export default function RootLayout({

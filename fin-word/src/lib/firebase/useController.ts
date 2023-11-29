@@ -1,5 +1,11 @@
 import { User } from "firebase/auth";
-import { firestoreApp } from ".";
+import * as firebase from "firebase/app";
+
+// If you enabled Analytics in your project, add the Firebase SDK for Analytics
+import "firebase/analytics";
+
+// Add the Firebase products that you want to use
+import "firebase/firestore";
 import {
   getFirestore,
   doc,
@@ -10,7 +16,7 @@ import {
   getDoc,
 } from "firebase/firestore";
 
-export const firestore = getFirestore(firestoreApp);
+export const firestore = getFirestore();
 
 export const usersCollection = collection(firestore, "users");
 
