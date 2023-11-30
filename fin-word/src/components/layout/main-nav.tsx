@@ -23,7 +23,7 @@ export default function MainNav() {
           <Link href="/" className="flex items-center space-x-2">
             <RocketIcon className="h-5 w-5 text-foreground" />
             <span className="overflow-auto font-semibold leading-tight tracking-tight">
-            BULL-ISH
+              BULL-ISH
             </span>
           </Link>
           <div className="hidden md:flex md:gap-x-12">
@@ -36,9 +36,12 @@ export default function MainNav() {
             >
               Test
             </Link>
+            <span className="text-sm font-light text-foreground/60">
+              A Syam Shukla Production
+            </span>
           </div>
         </div>
-        <div className="flex lg:hidden">
+        <div className="text-foreground">
           <button
             type="button"
             className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
