@@ -2,10 +2,10 @@
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { initializeApp } from 'firebase/app'
-import { db, firebaseConfig } from '@/lib/firebase/index'
+import { db, firebaseConfig, app, auth, fireStore } from '@/lib/firebase/index'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { useCollection } from 'react-firebase-hooks/firestore'
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import {
   Table,
   TableBody,
@@ -26,17 +26,25 @@ import {
   setDoc,
   getDoc,
 } from 'firebase/firestore'
+import { useRouter } from 'next/navigation'
 
 export default function PlayLayout() {
-  const app = initializeApp(firebaseConfig)
-  const auth = getAuth(app)
-  const firestore = getFirestore(app)
   const [ticker, setTicker] = useState('')
   const [stockDataList, setStockDataList] = useState<any[]>([])
   const [userUpdated, setUserUpdated] = useState(false)
   const [user] = useAuthState(auth) // Assuming you are using Firebase Authentication
   const currentDate = new Date().toISOString().split('T')[0]
-
+  const router = useRouter()
+  //check if user exists before allowing them to play user.uid
+  useEffect(() => {
+    const user = getAuth().currentUser
+    if (user) {
+      console.log('user exists')
+    } else {
+      console.log('user does not exist')
+      router.push('/login')
+    }
+  }, [router])
   const saveReset = async () => {
     try {
       const data = await getStockData(ticker)
@@ -46,7 +54,7 @@ export default function PlayLayout() {
 
         // Create a document reference with an even number of segments
         const documentId = `${userId}_${currentDate}`
-        const userDocRef = doc(collection(firestore, 'picks'), documentId)
+        const userDocRef = doc(collection(fireStore, 'picks'), documentId)
         console.log('Document reference path:', userDocRef.path)
 
         // Check if the document exists
