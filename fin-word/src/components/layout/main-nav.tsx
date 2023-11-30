@@ -28,7 +28,7 @@ export default function MainNav() {
           </Link>
           <div className="hidden md:flex md:gap-x-12">
             <Link
-              href="/play-now"
+              href="/play"
               className={cn(
                 'text-sm font-light transition-colors hover:text-foreground/80',
                 pathname === '/test' ? 'text-foreground' : 'text-foreground/60',

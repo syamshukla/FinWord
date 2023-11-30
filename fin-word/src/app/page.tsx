@@ -7,7 +7,7 @@ import React from 'react'
 
 export default function Home() {
   return (
-    <div className="relative">
+    <div className="relative min-h-screen">
       <GridPattern
         className={cn(
           '[mask-image:linear-gradient(to_bottom_right,white,transparent,transparent)] ',
