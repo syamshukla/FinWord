@@ -1,7 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
 import {
   getFirestore,
   collection,
@@ -14,14 +13,17 @@ import {
   DocumentData,
 } from 'firebase/firestore'
 import { firebaseConfig } from '@/lib/firebase'
-import { Label } from '@/components/ui/label'
-import { stat } from 'fs'
 
 const app = initializeApp(firebaseConfig)
 const firestore = getFirestore(app)
+interface UserData {
+  id: number
+  name: string
+  user: DocumentData
+}
 
 const Stats = () => {
-  const [userData, setUserData] = useState([])
+  const [userData, setUserData] = useState<UserData[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
@@ -77,11 +79,29 @@ const Stats = () => {
         )
 
         const result = await Promise.all(validUserPromises)
-        const validResults: { pick: any; user: DocumentData; date: any }[] = [
-          ...result,
-        ].filter((item) => item !== null)
-        console.log('validResults', validResults)
-        setUserData(validResults)
+
+        // Filter out null values (picks with no matching user)
+        const validResults: { pick: any; user: DocumentData; date: any }[] =
+          result.filter(
+            (item): item is { pick: any; user: DocumentData; date: any } =>
+              item !== null,
+          )
+
+        // Convert DocumentData to UserData
+
+        const userDataArray: UserData[] = validResults.map(
+          ({ id, pick, user, date }) => ({
+            id,
+            pick,
+            user: user as DocumentData, // Assuming you have a type for DocumentData
+            date,
+          }),
+        )
+
+        // ...
+
+        // Set state with the converted data
+        setUserData(userDataArray)
       } catch (error) {
         console.error(error)
       }
