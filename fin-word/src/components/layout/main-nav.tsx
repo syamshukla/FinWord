@@ -27,31 +27,41 @@ export default function MainNav() {
             </span>
           </Link>
           <div className="hidden md:flex md:gap-x-12">
-            <Button>
-              <Link
-                href="/play"
-                className={cn(
-                  'text-sm font-light transition-colors hover:text-foreground/80',
-                  pathname === '/test'
-                    ? 'text-foreground'
-                    : 'text-foreground/60',
-                )}
-              >
-                Play
-              </Link>
-            </Button>
+            <Link
+              href="/play"
+              className={cn(
+                'text-sm font-light transition-colors hover:text-foreground/80',
+                pathname === '/play' ? 'text-foreground' : 'text-foreground/60',
+              )}
+            >
+              Play
+            </Link>
+            <Link
+              href="/results"
+              className={cn(
+                'text-sm font-light transition-colors hover:text-foreground/80',
+                pathname === '/results'
+                  ? 'text-foreground'
+                  : 'text-foreground/60',
+              )}
+            >
+              Your Picks
+            </Link>
+
+            <Link
+              href="/stats"
+              className={cn(
+                'text-sm font-light transition-colors hover:text-foreground/80',
+                pathname === '/stats'
+                  ? 'text-foreground'
+                  : 'text-foreground/60',
+              )}
+            >
+              Scoreboard
+            </Link>
           </div>
         </div>
-        <Button>
-          <Link href="/results" className="text-sm font-light">
-            Your Picks
-          </Link>
-        </Button>
-        <Button>
-          <Link href="/stats" className="text-sm font-light">
-            ScoreBoard
-          </Link>
-        </Button>
+
         <div className="text-foreground">
           <button
             type="button"
