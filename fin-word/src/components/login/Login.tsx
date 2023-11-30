@@ -10,7 +10,10 @@ const LoginButton: React.FC = () => {
   return (
     <Button
       className="w-full rounded-md p-4"
-      onClick={() => handleSignIn(router)}
+      onClick={async () => {
+        await handleSignIn()
+        router.push('/play')
+      }}
     >
       Sign In With Google
     </Button>
