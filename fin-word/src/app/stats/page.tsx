@@ -11,14 +11,16 @@ import {
   getDocs,
   getDoc,
   doc,
+  DocumentData,
 } from 'firebase/firestore'
 import { firebaseConfig } from '@/lib/firebase'
 import { Label } from '@/components/ui/label'
+import { stat } from 'fs'
 
 const app = initializeApp(firebaseConfig)
 const firestore = getFirestore(app)
 
-const Page = () => {
+const Stats = () => {
   const [userData, setUserData] = useState([])
 
   useEffect(() => {
@@ -52,7 +54,8 @@ const Page = () => {
             const [uid, date] = latestPick.documentName.split('_')
 
             // Use the correct collection reference
-            const userDocRef = doc(collection(firestore, 'users', uid))
+            const usersCollectionRef = collection(firestore, 'users')
+            const userDocRef = doc(usersCollectionRef, uid)
             const userDoc = await getDoc(userDocRef)
 
             if (userDoc.exists()) {
@@ -74,8 +77,11 @@ const Page = () => {
         )
 
         const result = await Promise.all(validUserPromises)
-        console.log('result', result)
-        setUserData(result)
+        const validResults: { pick: any; user: DocumentData; date: any }[] = [
+          ...result,
+        ].filter((item) => item !== null)
+        console.log('validResults', validResults)
+        setUserData(validResults)
       } catch (error) {
         console.error(error)
       }
@@ -86,13 +92,23 @@ const Page = () => {
 
   return (
     <div className="flex h-screen flex-col items-center justify-center">
-      <div className="flex items-center justify-center">
-        <Label htmlFor="ticker">Score Board</Label>
+      <div className="w-96 rounded-lg  p-6 shadow-md">
+        <h1 className="mb-4 text-2xl font-semibold">Score Board</h1>
         <ul>
           {userData.map((item, index) => (
-            <li key={index}>
-              <p>User ID: {item.user}</p>
-              <p>Pick Ticker: {item.pick}</p>
+            <li key={index} className="mb-6">
+              <p className="text-lg font-bold">User: {item.user.name}</p>
+              <p>
+                Picked Tickers:
+                <ul className="ml-4 list-disc">
+                  {item.pick.stocks.map((stock, idx) => (
+                    <li key={idx} className="text-sm">
+                      Ticker: {stock.ticker}
+                    </li>
+                  ))}
+                </ul>
+              </p>
+              {/* Access other properties if needed */}
             </li>
           ))}
         </ul>
@@ -100,5 +116,4 @@ const Page = () => {
     </div>
   )
 }
-
-export default Page
+export default Stats
