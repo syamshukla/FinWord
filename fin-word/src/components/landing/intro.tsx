@@ -3,8 +3,25 @@ import { motion } from 'framer-motion'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import NumberTicker from './number-ticker'
-
+import { getUsersCount } from '@/lib/firebase/index'
+import { use, useEffect, useState } from 'react'
 export function Intro() {
+  const [totalUsers, setTotalUsers] = useState(0)
+
+  useEffect(() => {
+    const fetchTotalUsers = async () => {
+      try {
+        const usersCount = await getUsersCount()
+        console.log('usersCount', usersCount)
+        setTotalUsers(usersCount)
+        console.log('totalUsers', totalUsers)
+      } catch (error) {
+        console.error('Error fetching total users:', error)
+      }
+    }
+
+    fetchTotalUsers()
+  }, [])
   const FADE_UP_ANIMATION_VARIANTS = {
     hidden: { opacity: 0, y: 10 },
     show: { opacity: 1, y: 0, transition: { type: 'spring' } },
@@ -34,7 +51,7 @@ export function Intro() {
             <span className="absolute inset-0" aria-hidden="true" />
             Read more <span aria-hidden="true">&rarr;</span>
           </a> */}
-          Played by <NumberTicker value={5} /> people.{' '}
+          Played by <NumberTicker value={totalUsers} /> people.{' '}
           <Link href="/play" className="font-semibold text-primary">
             <span className="absolute inset-0" aria-hidden="true" />
             Join the fun <span aria-hidden="true">&rarr;</span>

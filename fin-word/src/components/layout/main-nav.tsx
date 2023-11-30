@@ -94,14 +94,12 @@ export default function MainNav() {
           </button>
         </div>
         <div className="flex items-center space-x-1">
-          {
-            user ? (
-              <>
-                <span>{user.displayName || user.email}</span>
-              </>
-            ) : null /* Render nothing if user is not logged in */
-          }
-          {user === null && ( // Render login button only if user state is explicitly set to null
+          {user ? (
+            <>
+              <span>{user.displayName || user.email}</span>
+            </>
+          ) : null}
+          {user === null && (
             <Button asChild>
               <Link href="/login">Log In</Link>
             </Button>
@@ -112,4 +110,3 @@ export default function MainNav() {
     </header>
   )
 }
-

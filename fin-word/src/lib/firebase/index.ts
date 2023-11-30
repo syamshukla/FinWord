@@ -2,7 +2,8 @@
 import { initializeApp } from 'firebase/app'
 import { getAnalytics } from 'firebase/analytics'
 import { GoogleAuthProvider, getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
+import { collection, getDocs, getFirestore } from 'firebase/firestore'
+import { useState } from 'react'
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -25,4 +26,26 @@ const analytics = getAnalytics(app)
 const googleProvider = new GoogleAuthProvider()
 const auth = getAuth()
 const db = getFirestore(app)
-export { app, fireStore, analytics, auth, googleProvider, firebaseConfig, db }
+
+let totalUsers = 0;
+const getUsersCount = async () => {
+  try {
+    // Reference to the "users" collection
+    const usersCollection = collection(db, 'users');
+
+    // Get all documents in the "users" collection
+    const usersSnapshot = await getDocs(usersCollection);
+
+    // Count the number of documents (users)
+    const numberOfUsers = usersSnapshot.size;
+
+    console.log('Number of users:', numberOfUsers);
+    totalUsers = numberOfUsers;
+    return numberOfUsers;
+  } catch (error) {
+    console.error('Error fetching users count:', error);
+    throw error;
+  }
+};
+
+export { app, fireStore, analytics, auth, googleProvider, firebaseConfig, db, getUsersCount, totalUsers}
