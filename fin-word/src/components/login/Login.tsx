@@ -11,6 +11,7 @@ const LoginButton: React.FC = () => {
     <Button
       className="w-full rounded-md p-4"
       onClick={async () => {
+        // @ts-ignore
         await handleSignIn()
         router.push('/play')
       }}
