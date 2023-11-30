@@ -36,11 +36,12 @@ export default function MainNav() {
             >
               Test
             </Link>
-            <span className="text-sm font-light text-foreground/60">
-              A Syam Shukla Production
-            </span>
           </div>
         </div>
+        <span className="text-xs font-light text-foreground/60">
+          A Syam Shukla Production
+        </span>
+
         <div className="text-foreground">
           <button
             type="button"
