@@ -26,11 +26,16 @@ import { firebaseConfig } from '@/lib/firebase'
 const app = initializeApp(firebaseConfig)
 const auth = getAuth(app)
 const firestore = getFirestore(app)
+interface StockData {
+  ticker: string
+  name: string
+}
 
 const Results = () => {
   const [user] = useAuthState(auth)
-  const [stockDataList, setStockDataList] = useState([])
+  const [stockDataList, setStockDataList] = useState<StockData[]>([])
   const [date, setDate] = useState('')
+
   useEffect(() => {
     const fetchResultsData = async () => {
       if (user) {
@@ -68,13 +73,13 @@ const Results = () => {
 
         try {
           const querySnapshot = await getDocs(q)
-          const data = []
+          const data: StockData[] = []
 
           querySnapshot.forEach((doc) => {
             const stocksData = doc.data().stocks
 
             // Assuming stocks is an array with 5 items, each having name and ticker properties
-            stocksData.forEach((stock) => {
+            stocksData.forEach((stock: StockData) => {
               data.push(stock)
             })
           })
