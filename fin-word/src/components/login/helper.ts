@@ -18,7 +18,7 @@ export const handleSignIn = (router: AppRouterInstance) => {
       const user = result?.user;
       if (user) {
         addUserToFirestore(user);
-        router.push("/");
+        router.push("/play");
       }
     })
     .catch((error) => {
