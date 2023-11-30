@@ -115,8 +115,8 @@ export default function PlayLayout() {
   }, [userUpdated, stockDataList])
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center">
-      <div className="flex w-full max-w-sm flex-col items-center gap-1.5">
+    <div className="flex h-screen w-full max-w-lg flex-col items-center justify-center">
+      <div className="flex w-full  flex-col items-center gap-1.5">
         <Label htmlFor="email">
           Enter Stock Ticker ({stockDataList.length}/5)
         </Label>
@@ -131,7 +131,7 @@ export default function PlayLayout() {
           Enter
         </Button>
       </div>
-      <div className="flex w-full max-w-sm flex-col items-center gap-1.5">
+      <div className="flex w-full flex-col items-center gap-1.5">
         <Table>
           <TableHeader>
             <TableRow>
