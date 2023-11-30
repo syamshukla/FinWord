@@ -1,13 +1,14 @@
 'use client'
 import dynamic from 'next/dynamic'
+import React, { useEffect, useState } from 'react'
 const PlayLayout = dynamic(() => import('@/components/play/layout'), {
   ssr: false,
 })
-import React, { useEffect, useState } from 'react'
 
+// Page component
 export default function Page() {
   return (
-    <div>
+    <div className="flex h-screen items-center justify-center">
       <PlayLayout />
     </div>
   )
