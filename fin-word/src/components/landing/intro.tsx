@@ -27,7 +27,7 @@ export function Intro() {
         className="hidden sm:mb-8 sm:flex sm:justify-center"
         variants={FADE_UP_ANIMATION_VARIANTS}
       >
-        <div className="relative z-50 rounded-full bg-background px-3 py-1 text-sm leading-6 text-muted-foreground ring-1 ring-ring/10 hover:ring-ring/20">
+        <div className="relative z-50 rounded-full bg-background px-3 py-1 text-sm leading-6 text-muted-foreground ring-1 ring-ring/10 transition-all duration-200 hover:ring-ring/20">
           Learn how FinWord works.{' '}
           <a href="#" className="font-semibold text-primary">
             <span className="absolute inset-0" aria-hidden="true" />
