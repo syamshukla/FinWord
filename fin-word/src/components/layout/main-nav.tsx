@@ -1,30 +1,35 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 'use client'
 
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { usePathname, useRouter } from 'next/navigation'
-
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { db, firebaseConfig, app, auth, fireStore } from '@/lib/firebase/index'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { getAuth } from 'firebase/auth'
 import { RocketIcon } from '@radix-ui/react-icons'
 import { ModeToggle } from '../mode-toggle'
-import { User, getAuth } from 'firebase/auth'
-const user = getAuth().currentUser
+
 export default function MainNav() {
-  const pathname = usePathname()
+  const [user] = useAuthState(auth)
   const router = useRouter()
+  const [avatar, setAvatar] = useState(false)
+  const pathname = usePathname()
   useEffect(() => {
     const checkUser = async () => {
       const authUser = getAuth().currentUser
 
       if (authUser) {
         console.log('User exists')
-        setUser(authUser)
+        setAvatar(true)
       } else {
         console.log('User does not exist')
-        setUser(null)
-        router.push('/login')
+        setAvatar(false)
       }
     }
 
@@ -93,7 +98,6 @@ export default function MainNav() {
             user ? (
               <>
                 <span>{user.displayName || user.email}</span>
-                <ModeToggle />
               </>
             ) : null /* Render nothing if user is not logged in */
           }

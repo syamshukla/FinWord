@@ -1,11 +1,9 @@
 'use client'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { initializeApp } from 'firebase/app'
 import { db, firebaseConfig, app, auth, fireStore } from '@/lib/firebase/index'
 import { useAuthState } from 'react-firebase-hooks/auth'
-import { useCollection } from 'react-firebase-hooks/firestore'
-import React, { use, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Table,
   TableBody,
@@ -18,14 +16,7 @@ import { Button } from '@/components/ui/button'
 import { toast } from 'sonner'
 import { getAuth } from 'firebase/auth'
 
-import {
-  getFirestore,
-  collection,
-  doc,
-  updateDoc,
-  setDoc,
-  getDoc,
-} from 'firebase/firestore'
+import { collection, doc, updateDoc, setDoc, getDoc } from 'firebase/firestore'
 import { useRouter } from 'next/navigation'
 
 export default function PlayLayout() {
