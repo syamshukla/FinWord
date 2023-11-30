@@ -28,13 +28,13 @@ export default function MainNav() {
           </Link>
           <div className="hidden md:flex md:gap-x-12">
             <Link
-              href="/test"
+              href="/play-now"
               className={cn(
                 'text-sm font-light transition-colors hover:text-foreground/80',
                 pathname === '/test' ? 'text-foreground' : 'text-foreground/60',
               )}
             >
-              Test
+              Play
             </Link>
           </div>
         </div>
@@ -52,7 +52,7 @@ export default function MainNav() {
         </div>
         <div className="flex items-center space-x-1">
           <Button asChild>
-            <Link href="/play">Play Now</Link>
+            <Link href="/login">Log In</Link>
           </Button>
           <ModeToggle />
         </div>
