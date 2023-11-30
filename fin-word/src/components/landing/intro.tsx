@@ -3,25 +3,28 @@ import { motion } from 'framer-motion'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import NumberTicker from './number-ticker'
-import { getUsersCount } from '@/lib/firebase/index'
+import { getUsersCount, db } from '@/lib/firebase/index'
 import { use, useEffect, useState } from 'react'
+import { collection, onSnapshot } from 'firebase/firestore'
 export function Intro() {
   const [totalUsers, setTotalUsers] = useState(0)
 
-  useEffect(() => {
-    const fetchTotalUsers = async () => {
-      try {
-        const usersCount = await getUsersCount()
-        console.log('usersCount', usersCount)
-        setTotalUsers(usersCount)
-        console.log('totalUsers', totalUsers)
-      } catch (error) {
-        console.error('Error fetching total users:', error)
-      }
-    }
+  const [refreshSignal, setRefreshSignal] = useState(false)
 
-    fetchTotalUsers()
-  }, [])
+  useEffect(() => {
+    const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
+      // Update totalUsers whenever the Firestore collection changes
+      const usersCount = snapshot.size
+      console.log('usersCount', usersCount)
+      setTotalUsers(usersCount)
+      // Set a new refresh signal to trigger the effect again
+      console.log('totalUsers', totalUsers)
+      setRefreshSignal((prevSignal) => !prevSignal)
+    })
+
+    // Cleanup the subscription when the component unmounts
+    return () => unsubscribe()
+  }, [refreshSignal, totalUsers])
   const FADE_UP_ANIMATION_VARIANTS = {
     hidden: { opacity: 0, y: 10 },
     show: { opacity: 1, y: 0, transition: { type: 'spring' } },
