@@ -1,18 +1,35 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 import { RocketIcon } from '@radix-ui/react-icons'
 import { ModeToggle } from '../mode-toggle'
-import { auth } from '@/lib/firebase'
-
+import { User, getAuth } from 'firebase/auth'
+const user = getAuth().currentUser
 export default function MainNav() {
   const pathname = usePathname()
+  const router = useRouter()
+  useEffect(() => {
+    const checkUser = async () => {
+      const authUser = getAuth().currentUser
+
+      if (authUser) {
+        console.log('User exists')
+        setUser(authUser)
+      } else {
+        console.log('User does not exist')
+        setUser(null)
+        router.push('/login')
+      }
+    }
+
+    checkUser()
+  }, [router])
 
   return (
     <header className="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -72,12 +89,25 @@ export default function MainNav() {
           </button>
         </div>
         <div className="flex items-center space-x-1">
-          <Button asChild>
-            <Link href="/login">Log In</Link>
-          </Button>
+          {
+            user ? (
+              <>
+                <span>{user.displayName || user.email}</span>
+                <ModeToggle />
+              </>
+            ) : null /* Render nothing if user is not logged in */
+          }
+          {user === null && ( // Render login button only if user state is explicitly set to null
+            <Button asChild>
+              <Link href="/login">Log In</Link>
+            </Button>
+          )}
           <ModeToggle />
         </div>
       </nav>
     </header>
   )
+}
+function setUser(authUser: User) {
+  throw new Error('Function not implemented.')
 }
