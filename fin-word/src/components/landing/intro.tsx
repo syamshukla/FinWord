@@ -3,21 +3,38 @@ import { motion } from 'framer-motion'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import NumberTicker from './number-ticker'
-import { db } from '@/lib/firebase/index'
+import { db, getUsersCount } from '@/lib/firebase/index'
 import { useEffect, useState } from 'react'
-import { collection, onSnapshot } from 'firebase/firestore'
+import { collection, getDocs, onSnapshot } from 'firebase/firestore'
 export default function Intro() {
   const [totalUsers, setTotalUsers] = useState(0)
 
-  const [refreshSignal, setRefreshSignal] = useState(false)
-
+  console.log('totalUsers', totalUsers)
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
-      const usersCount = snapshot.size
-      setTotalUsers(usersCount)
-    })
-    return () => unsubscribe()
-  }, [refreshSignal, totalUsers])
+    const fetchUsersCount = async () => {
+      try {
+        const numberOfUsers = await getUsersCount()
+        console.log('numberOfUsers', numberOfUsers)
+        setTotalUsers(numberOfUsers)
+      } catch (error) {
+        console.error('Error fetching users count:', error)
+      }
+    }
+    fetchUsersCount()
+  }, [])
+  // useEffect(() => {
+  //   const fetchTotalUsers = async () => {
+  //     try {
+  //       const querySnapshot = await getDocs(collection(db, 'users'))
+  //       const usersCount = querySnapshot.size
+  //       setTotalUsers(usersCount)
+  //     } catch (error) {
+  //       console.error('Error fetching total users:', error)
+  //     }
+  //   }
+
+  //   fetchTotalUsers()
+  // }, [refreshSignal, totalUsers])
   const FADE_UP_ANIMATION_VARIANTS = {
     hidden: { opacity: 0, y: 10 },
     show: { opacity: 1, y: 0, transition: { type: 'spring' } },

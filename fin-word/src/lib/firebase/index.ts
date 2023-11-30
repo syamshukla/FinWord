@@ -27,7 +27,7 @@ const googleProvider = new GoogleAuthProvider()
 const auth = getAuth()
 const db = getFirestore(app)
 
-let totalUsers = 0;
+
 const getUsersCount = async () => {
   try {
     // Reference to the "users" collection
@@ -40,7 +40,6 @@ const getUsersCount = async () => {
     const numberOfUsers = usersSnapshot.size;
 
     console.log('Number of users:', numberOfUsers);
-    totalUsers = numberOfUsers;
     return numberOfUsers;
   } catch (error) {
     console.error('Error fetching users count:', error);
@@ -48,4 +47,4 @@ const getUsersCount = async () => {
   }
 };
 
-export { app, fireStore, analytics, auth, googleProvider, firebaseConfig, db, getUsersCount, totalUsers}
+export { app, fireStore, analytics, auth, googleProvider, firebaseConfig, db, getUsersCount}
