@@ -9,6 +9,7 @@ import { usePathname } from 'next/navigation'
 
 import { RocketIcon } from '@radix-ui/react-icons'
 import { ModeToggle } from '../mode-toggle'
+import { auth } from '@/lib/firebase'
 
 export default function MainNav() {
   const pathname = usePathname()

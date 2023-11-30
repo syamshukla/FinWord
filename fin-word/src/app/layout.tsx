@@ -6,8 +6,7 @@ import MainNav from '@/components/layout/main-nav'
 import { Container } from '@/components/layout/container'
 import { Toaster } from 'sonner'
 import Footer from '@/components/layout/footer'
-
-const inter = Inter({ subsets: ['latin'] })
+import { GeistSans } from 'geist/font/sans'
 
 export const metadata: Metadata = {
   title: 'BULL-ISH',
@@ -20,8 +19,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+    <html lang="en" className={GeistSans.className} suppressHydrationWarning>
+      <body>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
