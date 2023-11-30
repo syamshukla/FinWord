@@ -120,12 +120,20 @@ export default function MainNav() {
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="flex flex-col gap-2 ">
-                <Button variant="outline">
-                  <RocketIcon className="mr-2 h-5 w-5 text-foreground" />
-                  Play Now
+                <Button variant="outline" asChild>
+                  <Link href="/play">
+                    <RocketIcon className="mr-2 h-5 w-5 text-foreground" />
+                    Play Now
+                  </Link>
                 </Button>
-                <Button variant="outline">Your Picks</Button>
-                <Button variant="outline">Scoreboard</Button>
+
+                <Button variant="outline" asChild>
+                  <Link href="/results">Your Picks</Link>
+                </Button>
+
+                <Button variant="outline" asChild>
+                  <Link href="/stats">Scoreboard</Link>
+                </Button>
               </PopoverContent>
             </Popover>
           </div>
