@@ -9,7 +9,7 @@ export default function NumberTicker({
   delay = 0,
   className,
 }: {
-  value: any
+  value: number
   direction?: 'up' | 'down'
   className?: string
   delay?: number // delay in s
@@ -26,7 +26,7 @@ export default function NumberTicker({
     setTimeout(() => {
       motionValue.set(direction === 'down' ? 0 : value)
     }, delay * 1000)
-  }, [motionValue, isInView, delay])
+  }, [motionValue, isInView, delay, direction, value])
 
   useEffect(
     () =>
