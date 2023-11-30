@@ -6,7 +6,7 @@ import NumberTicker from './number-ticker'
 import { getUsersCount, db } from '@/lib/firebase/index'
 import { use, useEffect, useState } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore'
-export function Intro() {
+export default function Intro() {
   const [totalUsers, setTotalUsers] = useState(0)
 
   const [refreshSignal, setRefreshSignal] = useState(false)
