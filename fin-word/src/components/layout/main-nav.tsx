@@ -12,9 +12,14 @@ import { Label } from '@/components/ui/label'
 import { db, firebaseConfig, app, auth, fireStore } from '@/lib/firebase/index'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
-import { RocketIcon } from '@radix-ui/react-icons'
+import { HamburgerMenuIcon, RocketIcon } from '@radix-ui/react-icons'
 import { ModeToggle } from '../mode-toggle'
 import ProfileDropdown from './profile-dropdown'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 
 export default function MainNav() {
   const [user] = useAuthState(auth)
@@ -107,6 +112,23 @@ export default function MainNav() {
             </Button>
           )}
           <ModeToggle />
+          <div className="block md:hidden">
+            <Popover>
+              <PopoverTrigger>
+                <Button variant="ghost" size="icon">
+                  <HamburgerMenuIcon className="h-6 w-6 text-foreground" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="flex flex-col gap-2 ">
+                <Button variant="outline">
+                  <RocketIcon className="mr-2 h-5 w-5 text-foreground" />
+                  Play Now
+                </Button>
+                <Button variant="outline">Your Picks</Button>
+                <Button variant="outline">Scoreboard</Button>
+              </PopoverContent>
+            </Popover>
+          </div>
         </div>
       </nav>
     </header>
