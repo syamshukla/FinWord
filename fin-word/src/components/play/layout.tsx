@@ -131,22 +131,24 @@ export default function PlayLayout() {
           Enter
         </Button>
       </div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Ticker</TableHead>
-            <TableHead>Name</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {stockDataList.map((stockData, index) => (
-            <TableRow key={index}>
-              <TableCell>{stockData.ticker}</TableCell>
-              <TableCell>{stockData.name}</TableCell>
+      <div className="flex w-full max-w-sm flex-col items-center gap-1.5">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Ticker</TableHead>
+              <TableHead>Name</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {stockDataList.map((stockData, index) => (
+              <TableRow key={index}>
+                <TableCell>{stockData.ticker}</TableCell>
+                <TableCell>{stockData.name}</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
     </div>
   )
 }
