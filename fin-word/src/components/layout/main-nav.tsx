@@ -14,6 +14,7 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import { getAuth } from 'firebase/auth'
 import { RocketIcon } from '@radix-ui/react-icons'
 import { ModeToggle } from '../mode-toggle'
+import ProfileDropdown from './profile-dropdown'
 
 export default function MainNav() {
   const [user] = useAuthState(auth)
@@ -95,9 +96,10 @@ export default function MainNav() {
         </div>
         <div className="flex items-center space-x-1">
           {user ? (
-            <>
-              <span>{user.displayName || user.email}</span>
-            </>
+            // <>
+            //   <span>{user.displayName || user.email}</span>
+            // </>
+            <ProfileDropdown user={user} />
           ) : null}
           {user === null && (
             <Button asChild>
