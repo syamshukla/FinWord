@@ -112,6 +112,4 @@ export default function MainNav() {
     </header>
   )
 }
-function setUser(authUser: User) {
-  throw new Error('Function not implemented.')
-}
+
