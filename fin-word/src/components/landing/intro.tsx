@@ -3,8 +3,8 @@ import { motion } from 'framer-motion'
 import { Button } from '../ui/button'
 import Link from 'next/link'
 import NumberTicker from './number-ticker'
-import { getUsersCount, db } from '@/lib/firebase/index'
-import { use, useEffect, useState } from 'react'
+import { db } from '@/lib/firebase/index'
+import { useEffect, useState } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore'
 export default function Intro() {
   const [totalUsers, setTotalUsers] = useState(0)
@@ -13,16 +13,9 @@ export default function Intro() {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(collection(db, 'users'), (snapshot) => {
-      // Update totalUsers whenever the Firestore collection changes
       const usersCount = snapshot.size
-      console.log('usersCount', usersCount)
       setTotalUsers(usersCount)
-      // Set a new refresh signal to trigger the effect again
-      console.log('totalUsers', totalUsers)
-      setRefreshSignal((prevSignal) => !prevSignal)
     })
-
-    // Cleanup the subscription when the component unmounts
     return () => unsubscribe()
   }, [refreshSignal, totalUsers])
   const FADE_UP_ANIMATION_VARIANTS = {
