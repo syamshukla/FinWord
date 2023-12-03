@@ -47,4 +47,32 @@ const getUsersCount = async () => {
   }
 };
 
-export { app, fireStore, analytics, auth, googleProvider, firebaseConfig, db, getUsersCount}
+// get all users
+const getUsers = async () => {
+  try {
+    // Reference to the "users" collection
+    const usersCollection = collection(db, 'users');
+
+    // Get all documents in the "users" collection
+    const usersSnapshot = await getDocs(usersCollection);
+    return usersSnapshot;
+  } catch (error) {
+    console.error('Error fetching users count:', error);
+    throw error;
+  }
+}
+const getPicks = async () => {
+  try {
+    // Reference to the "users" collection
+    const usersCollection = collection(db, 'picks');
+
+    // Get all documents in the "users" collection
+    const usersSnapshot = await getDocs(usersCollection);
+    return usersSnapshot;
+  } catch (error) {
+    console.error('Error fetching users count:', error);
+    throw error;
+  }
+}
+
+export { app, fireStore, analytics, auth, googleProvider, firebaseConfig, db, getUsersCount, getUsers, getPicks}

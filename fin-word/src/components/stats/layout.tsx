@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { use, useEffect, useState } from 'react'
 import { initializeApp } from 'firebase/app'
 import {
   getFirestore,
@@ -11,13 +11,18 @@ import {
   getDoc,
   doc,
   DocumentData,
+  updateDoc,
 } from 'firebase/firestore'
 import { firebaseConfig } from '@/lib/firebase'
 
 // const app = initializeApp(firebaseConfig)
-import { app, fireStore } from '@/lib/firebase'
+import { app, fireStore, getUsers, getPicks } from '@/lib/firebase'
 
 interface UserData {
+  percent: any
+  pick: any
+  date(ticker: any, date: any): unknown
+  stocks: any
   id: number
   name: string
   user: DocumentData
@@ -29,13 +34,11 @@ const Stats = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const picksQuery = query(collection(fireStore, 'picks'), limit(10))
-        const picksSnapshot = await getDocs(picksQuery)
-        const picksData = picksSnapshot.docs.map((doc) => ({
+        const picksSnapshot = getPicks()
+        const picksData = (await picksSnapshot).docs.map((doc) => ({
           documentName: doc.id,
           data: doc.data(),
         }))
-        console.log('picksData', picksData)
 
         // Create a map to store the latest picks for each UID
         const latestPicksMap = new Map()
@@ -50,20 +53,19 @@ const Stats = () => {
             latestPicksMap.set(uid, { ...pick, date })
           }
         })
-        console.log('latestPicksMap', latestPicksMap)
         // Fetch user data based on UID from the filtered picks data
         const userPromises = Array.from(latestPicksMap.values()).map(
           async (latestPick) => {
             const [uid, date] = latestPick.documentName.split('_')
 
             // Use the correct collection reference
+
             const usersCollectionRef = collection(fireStore, 'users')
             const userDocRef = doc(usersCollectionRef, uid)
             const userDoc = await getDoc(userDocRef)
 
             if (userDoc.exists()) {
               const userData = userDoc.data()
-              console.log('userData', userData)
               return { pick: latestPick.data, user: userData, date }
             } else {
               console.warn(
@@ -100,10 +102,7 @@ const Stats = () => {
             date,
           }),
         )
-
-        // ...
-
-        // Set state with the converted data
+        console.log('userDataArray', userDataArray)
         setUserData(userDataArray)
       } catch (error) {
         console.error(error)
@@ -112,6 +111,128 @@ const Stats = () => {
 
     fetchData()
   }, [])
+  const delayBetweenCalls = (60 * 1000) / 1
+  const fetchStockDataForTicker = async (
+    ticker: any,
+    date: (ticker: any, date: any) => unknown,
+  ) => {
+    console.log(`Fetching data for ${ticker}...`)
+    try {
+      const apiKey = '0asLfTPzTAe9WSPJHa1CNzp9pvbdhX9h'
+      const apiUrl = `https://api.polygon.io/v1/open-close/${ticker}/${date}?unadjusted=true&apiKey=${apiKey}`
+
+      // Check and update the rate limit for Polygon API
+      const currentTime = Date.now()
+      if (
+        fetchStockDataForTicker.lastApiCallTimestamp &&
+        currentTime - fetchStockDataForTicker.lastApiCallTimestamp <
+          delayBetweenCalls
+      ) {
+        const waitTime =
+          delayBetweenCalls -
+          (currentTime - fetchStockDataForTicker.lastApiCallTimestamp)
+        console.log(
+          `Waiting for ${waitTime} milliseconds before the next API call...`,
+        )
+        await new Promise((resolve) => setTimeout(resolve, waitTime))
+      }
+
+      const response = await fetch(apiUrl)
+      const data = await response.json()
+      console.log('data', data)
+
+      // Update the Firestore document with the retrieved data
+      const userDocRef = doc(
+        collection(fireStore, 'picks'),
+        `${ticker}_${date}`,
+      )
+      const userDoc = await getDoc(userDocRef)
+
+      if (userDoc.exists()) {
+        // Assuming you have a field named 'stocks' for storing stock data
+        const existingStocks = userDoc.data().stocks
+        const updatedStocks = existingStocks.map(
+          (existingStock: { ticker: any }) => {
+            if (existingStock.ticker === ticker) {
+              return {
+                ...existingStock,
+                polygonData: data,
+              }
+            }
+            return existingStock
+          },
+        )
+
+        // Update the Firestore document
+        await updateDoc(userDocRef, {
+          stocks: updatedStocks,
+        })
+      }
+
+      // Update the API call timestamp
+      fetchStockDataForTicker.lastApiCallTimestamp = currentTime
+      //calculate percent change
+      //based off open high
+      //open - high / open
+      const percent = (data.open - data.high) / data.open
+      console.log('percent', percent)
+      return percent
+    } catch (error) {
+      console.error(`Error fetching data for ${ticker}:`, error)
+      throw error
+    }
+  }
+
+  // Initialize the lastApiCallTimestamp
+  fetchStockDataForTicker.lastApiCallTimestamp = 0
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const makeApiCalls = async () => {
+    // Restrict API calls to 4 per minute
+    const maxCallsPerMinute = 1
+    const delayBetweenCalls = (60 * 1000) / maxCallsPerMinute // Calculate delay in milliseconds
+
+    for (const item of userData) {
+      for (const stock of item.pick.stocks) {
+        try {
+          // Make the API call for each ticker
+          console.log('stock', stock)
+          console.log('userData', userData)
+          const percent = await fetchStockDataForTicker(stock.ticker, item.date)
+          //round percent to 2 decimal places
+          const roundPercent = Math.round(percent * 100) / 100
+
+          // Ensure that 'percents' is an array
+          if (!item.pick.stocks.stock.percents) {
+            item.pick.stocks.stock.percents = []
+          }
+
+          // Add the stock and its percentage to the 'percents' array
+          item.pick.stocks.stock.percents.push({ stock, roundPercent })
+          console.log('roundPercent', roundPercent)
+          console.log('item', item)
+
+          // Update the state with the new data
+
+          // Wait for the specified delay before the next API call
+          await new Promise((resolve) => setTimeout(resolve, delayBetweenCalls))
+        } catch (error) {
+          console.error(`Error fetching data for ${stock.ticker}:`, error)
+        }
+      }
+      //calculate percent change for all stocks in item
+      //percent field should be there for all.
+      // add all percents and divide by 5
+      // add to item.percent
+      // update state
+      // update firestore
+    }
+  }
+
+  // Trigger the API calls when userData changes
+  useEffect(() => {
+    makeApiCalls()
+  }, [makeApiCalls, userData])
 
   return (
     <div className="flex h-screen flex-col items-center justify-center">
@@ -127,7 +248,7 @@ const Stats = () => {
                   {/* @ts-ignore */}
                   {item.pick.stocks.map((stock: any, idx: any) => (
                     <li key={idx} className="text-sm">
-                      Ticker: {stock.ticker}
+                      Ticker: {stock.percent}
                     </li>
                   ))}
                 </ul>
