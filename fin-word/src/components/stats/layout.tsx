@@ -39,7 +39,6 @@ const Stats = () => {
           documentName: doc.id,
           data: doc.data(),
         }))
-
         // Create a map to store the latest picks for each UID
         const latestPicksMap = new Map()
 
@@ -95,8 +94,8 @@ const Stats = () => {
         // @ts-ignore
         const userDataArray: UserData[] = validResults.map(
           // @ts-ignore
-          ({ id, pick, user, date }) => ({
-            id,
+          ({ uid, pick, user, date }) => ({
+            uid,
             pick,
             user: user as DocumentData, // Assuming you have a type for DocumentData
             date,
@@ -202,16 +201,16 @@ const Stats = () => {
           //round percent to 2 decimal places
           const roundPercent = Math.round(percent * 100) / 100
 
-          // Ensure that 'percents' is an array
-          if (!item.pick.stocks.stock.percents) {
-            item.pick.stocks.stock.percents = []
+          // Ensure that 'percent' is an array
+          if (!stock.percent) {
+            stock.percent = []
           }
 
-          // Add the stock and its percentage to the 'percents' array
-          item.pick.stocks.stock.percents.push({ stock, roundPercent })
+          // Add the percentage for the current stock to its 'percent' array
+          stock.percent.push(roundPercent)
+
           console.log('roundPercent', roundPercent)
           console.log('item', item)
-
           // Update the state with the new data
 
           // Wait for the specified delay before the next API call
@@ -220,12 +219,26 @@ const Stats = () => {
           console.error(`Error fetching data for ${stock.ticker}:`, error)
         }
       }
-      //calculate percent change for all stocks in item
-      //percent field should be there for all.
-      // add all percents and divide by 5
-      // add to item.percent
-      // update state
-      // update firestore
+      const overallPercentChange =
+        item.pick.stocks.reduce(
+          (total: any, stock: { percent: any }) =>
+            total + (stock.percent ? stock.percent : 0),
+          0,
+        ) / 5
+
+      // Add the overall percent change to 'item'
+      item.percent = overallPercentChange
+      console.log('item', item)
+      console.log('overallPercentChange', overallPercentChange)
+      console.log('updated item', item)
+      const pickDocId = `${item.user.uid}_${item.date}`
+      const picksCollectionRef = collection(fireStore, 'picks')
+      const pickDocRef = doc(picksCollectionRef, pickDocId)
+
+      // Update Firestore with the new overall percent change
+      await updateDoc(pickDocRef, {
+        percent: overallPercentChange,
+      })
     }
   }
 
@@ -248,7 +261,7 @@ const Stats = () => {
                   {/* @ts-ignore */}
                   {item.pick.stocks.map((stock: any, idx: any) => (
                     <li key={idx} className="text-sm">
-                      Ticker: {stock.percent}
+                      {stock.ticker}: {stock.percent}
                     </li>
                   ))}
                 </ul>

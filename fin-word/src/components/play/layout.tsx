@@ -42,7 +42,7 @@ export default function PlayLayout() {
 
       if (stockDataList.length === 4 && user) {
         const userId = user.uid
-
+        
         // Create a document reference with an even number of segments
         const documentId = `${userId}_${currentDate}`
         const userDocRef = doc(collection(fireStore, 'picks'), documentId)
