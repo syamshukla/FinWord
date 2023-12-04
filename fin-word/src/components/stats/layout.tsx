@@ -204,6 +204,8 @@ const Stats = () => {
           // Ensure that 'percent' is an array
           if (!stock.percent) {
             stock.percent = []
+          } else {
+            break
           }
 
           // Add the percentage for the current stock to its 'percent' array
