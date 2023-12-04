@@ -192,6 +192,9 @@ const Stats = () => {
     const delayBetweenCalls = (60 * 1000) / maxCallsPerMinute // Calculate delay in milliseconds
 
     for (const item of userData) {
+      if (item.pick.percent != null && item.pick.percent) {
+        break
+      }
       for (const stock of item.pick.stocks) {
         try {
           // Make the API call for each ticker
@@ -204,8 +207,6 @@ const Stats = () => {
           // Ensure that 'percent' is an array
           if (!stock.percent) {
             stock.percent = []
-          } else {
-            break
           }
 
           // Add the percentage for the current stock to its 'percent' array
