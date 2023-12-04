@@ -222,26 +222,34 @@ const Stats = () => {
           console.error(`Error fetching data for ${stock.ticker}:`, error)
         }
       }
+
       const overallPercentChange =
-        item.pick.stocks.reduce(
-          (total: any, stock: { percent: any }) =>
-            total + (stock.percent ? stock.percent : 0),
-          0,
-        ) / 5
+        item.pick.stocks.reduce((total: any, stock: { percent: any }) => {
+          const stockPercent = parseFloat(stock.percent)
 
-      // Add the overall percent change to 'item'
-      item.percent = overallPercentChange
-      console.log('item', item)
-      console.log('overallPercentChange', overallPercentChange)
-      console.log('updated item', item)
-      const pickDocId = `${item.user.uid}_${item.date}`
-      const picksCollectionRef = collection(fireStore, 'picks')
-      const pickDocRef = doc(picksCollectionRef, pickDocId)
+          // Check if stockPercent is a valid number
+          if (!isNaN(stockPercent)) {
+            return total + stockPercent
+          } else {
+            return total
+          }
+        }, 0) / 5
 
-      // Update Firestore with the new overall percent change
-      await updateDoc(pickDocRef, {
-        percent: overallPercentChange,
-      })
+      // Check if overallPercentChange is a valid number
+      const isValidOverallPercentChange = !isNaN(overallPercentChange)
+
+      // Update Firestore with the new overall percent change only if it's a valid number
+      if (isValidOverallPercentChange) {
+        const pickDocId = `${item.user.uid}_${item.date}`
+        const picksCollectionRef = collection(fireStore, 'picks')
+        const pickDocRef = doc(picksCollectionRef, pickDocId)
+
+        await updateDoc(pickDocRef, {
+          percent: overallPercentChange,
+        })
+      } else {
+        console.warn('Invalid overallPercentChange. Skipping Firestore update.')
+      }
     }
   }
 
@@ -258,7 +266,8 @@ const Stats = () => {
           {userData.map((item, index) => (
             <li key={index} className="mb-6">
               <p className="text-lg font-bold">User: {item.user.name}</p>
-              <p>Returns: {item.percent}</p>
+              <script> console.log(item.percent)</script>
+              <p>Returns: {item.pick.percent}</p>
               {/* Access other properties if needed */}
             </li>
           ))}
