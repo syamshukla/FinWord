@@ -258,17 +258,7 @@ const Stats = () => {
           {userData.map((item, index) => (
             <li key={index} className="mb-6">
               <p className="text-lg font-bold">User: {item.user.name}</p>
-              <p>
-                Picked Tickers:
-                <ul className="ml-4 list-disc">
-                  {/* @ts-ignore */}
-                  {item.pick.stocks.map((stock: any, idx: any) => (
-                    <li key={idx} className="text-sm">
-                      {stock.ticker}: {stock.percent}
-                    </li>
-                  ))}
-                </ul>
-              </p>
+              <p>Returns: {item.percent}</p>
               {/* Access other properties if needed */}
             </li>
           ))}
