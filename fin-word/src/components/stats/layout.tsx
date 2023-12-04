@@ -188,7 +188,7 @@ const Stats = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const makeApiCalls = async () => {
     // Restrict API calls to 4 per minute
-    const maxCallsPerMinute = 1
+    const maxCallsPerMinute = 4
     const delayBetweenCalls = (60 * 1000) / maxCallsPerMinute // Calculate delay in milliseconds
 
     for (const item of userData) {
