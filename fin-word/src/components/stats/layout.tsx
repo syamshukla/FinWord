@@ -110,7 +110,7 @@ const Stats = () => {
 
     fetchData()
   }, [])
-  const delayBetweenCalls = (60 * 1000) / 3
+  const delayBetweenCalls = (60 * 1000) / 2
   const fetchStockDataForTicker = async (
     ticker: any,
     date: (ticker: any, date: any) => unknown,
@@ -188,7 +188,7 @@ const Stats = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const makeApiCalls = async () => {
     // Restrict API calls to 4 per minute
-    const maxCallsPerMinute = 3
+    const maxCallsPerMinute = 2
     const delayBetweenCalls = (60 * 1000) / maxCallsPerMinute // Calculate delay in milliseconds
 
     for (const item of userData) {
@@ -199,7 +199,7 @@ const Stats = () => {
           console.log('userData', userData)
           const percent = await fetchStockDataForTicker(stock.ticker, item.date)
           //round percent to 2 decimal places
-          const roundPercent = Math.round(percent * 100) / 100
+          const roundPercent = Math.round(percent * 1000) / 1000
 
           // Ensure that 'percent' is an array
           if (!stock.percent) {
