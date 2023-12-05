@@ -110,7 +110,7 @@ const Stats = () => {
 
     fetchData()
   }, [])
-  const delayBetweenCalls = (60 * 1000) / 1
+  const delayBetweenCalls = (60 * 1000) / 3
   const fetchStockDataForTicker = async (
     ticker: any,
     date: (ticker: any, date: any) => unknown,
@@ -188,13 +188,10 @@ const Stats = () => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const makeApiCalls = async () => {
     // Restrict API calls to 4 per minute
-    const maxCallsPerMinute = 4
+    const maxCallsPerMinute = 3
     const delayBetweenCalls = (60 * 1000) / maxCallsPerMinute // Calculate delay in milliseconds
 
     for (const item of userData) {
-      if (item.pick.percent != null && item.pick.percent) {
-        break
-      }
       for (const stock of item.pick.stocks) {
         try {
           // Make the API call for each ticker
@@ -234,7 +231,7 @@ const Stats = () => {
             return total
           }
         }, 0) / 5
-
+      console.log('overallPercentChange', overallPercentChange)
       // Check if overallPercentChange is a valid number
       const isValidOverallPercentChange = !isNaN(overallPercentChange)
 
@@ -247,6 +244,7 @@ const Stats = () => {
         await updateDoc(pickDocRef, {
           percent: overallPercentChange,
         })
+        console.log('Saved to Firebase!!!')
       } else {
         console.warn('Invalid overallPercentChange. Skipping Firestore update.')
       }
@@ -266,7 +264,6 @@ const Stats = () => {
           {userData.map((item, index) => (
             <li key={index} className="mb-6">
               <p className="text-lg font-bold">User: {item.user.name}</p>
-              <script> console.log(item.percent)</script>
               <p>Returns: {item.pick.percent}</p>
               {/* Access other properties if needed */}
             </li>
